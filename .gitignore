@@ -7,3 +7,4 @@ output/
 dataset/*
 !dataset/test.wav
 test.py
+.DS_Store
