@@ -47,7 +47,7 @@ else:
 # 预热
 _, _ = model.transcribe("dataset/test.wav", beam_size=5)
 
-app = FastAPI(title="夜雨飘零语音识别")
+app = FastAPI(title="常青藤语音识别")
 app.mount('/static', StaticFiles(directory='static'), name='static')
 templates = Jinja2Templates(directory="templates")
 model_semaphore = None
