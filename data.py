@@ -94,7 +94,7 @@ def create_annotation_text(data_dir, annotation_path):
     for i in tqdm(range(len(lines))):
         audio_path = lines[i]['audio']['path']
         sample, sr = soundfile.read(audio_path)
-        duration = round(sample.shape[-1] / float(sr), 2)
+        duration = round(sample.shape[0] / float(sr), 2)
         lines[i]["duration"] = duration
         # lines[i]["sentences"] = [{"start": 0, "end": duration, "text": lines[i]["sentence"]}]
     for line in lines:
