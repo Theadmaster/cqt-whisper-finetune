@@ -13,8 +13,6 @@ from utils.model_utils import load_from_checkpoint
 from utils.reader import CustomDataset
 from utils.utils import print_arguments, make_inputs_require_grad, add_arguments
 
-torch._dynamo.config.suppress_errors = True
-
 parser = argparse.ArgumentParser(description=__doc__)
 add_arg = functools.partial(add_arguments, argparser=parser)
 add_arg("train_data",    type=str, default="dataset/train.json",       help="训练数据集的路径")
