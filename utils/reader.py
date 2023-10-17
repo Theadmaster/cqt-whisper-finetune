@@ -99,7 +99,8 @@ class CustomDataset(Dataset):
         transcript = data_list["sentences"] if self.timestamps else data_list["sentence"]
         language = data_list["language"] if 'language' in data_list.keys() else None
         if 'start_time' not in data_list["audio"].keys():
-            sample, sample_rate = soundfile.read(audio_file, dtype='float32')
+            # sample, sample_rate = soundfile.read(audio_file, dtype='float32')
+            sample, sample_rate = librosa.load(audio_file, dtype='float32')
         else:
             start_time, end_time = data_list["audio"]["start_time"], data_list["audio"]["end_time"]
             # 分割读取音频

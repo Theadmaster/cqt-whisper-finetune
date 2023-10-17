@@ -4,6 +4,7 @@ import os
 import functools
 
 import soundfile
+import librosa
 from tqdm import tqdm
 
 from utils.utils import download, unpack
@@ -37,7 +38,7 @@ def create_annotation_text(data_dir, annotation_path):
         os.makedirs(annotation_path)
     f_train = open(os.path.join(annotation_path, 'train.json'), 'w', encoding='utf-8')
     f_test = open(os.path.join(annotation_path, 'test.json'), 'w', encoding='utf-8')
-    transcript_path = os.path.join(data_dir, 'transcript', 'aortic_transcript_v1.jsonl')
+    transcript_path = os.path.join(data_dir, 'transcript', 'aortic_transcript_v2.jsonl')
     transcript_dict = {}
     with open(transcript_path, 'r', encoding='utf-8') as f:
         lines = f.readlines()
@@ -57,7 +58,7 @@ def create_annotation_text(data_dir, annotation_path):
     data_types = ['train', 'dev']
     lines = []
     for type in data_types:
-        audio_dir = os.path.join(data_dir, 'mp3', type)
+        audio_dir = os.path.join(data_dir, 'wav', type)
         for subfolder, _, filelist in sorted(os.walk(audio_dir)):
             for fname in filelist:
                 audio_path = os.path.join(subfolder, fname)
@@ -70,8 +71,10 @@ def create_annotation_text(data_dir, annotation_path):
                 lines.append(line)
     # 添加音频时长
     for i in tqdm(range(len(lines))):
+
         audio_path = lines[i]['audio']['path']
-        sample, sr = soundfile.read(audio_path)
+        print(audio_path)
+        sample, sr = librosa.load(audio_path)
         duration = round(sample.shape[0] / float(sr), 2)
         lines[i]["duration"] = duration
         lines[i]["sentences"] = [{"start": 0, "end": duration, "text": lines[i]["sentence"]}]
@@ -79,7 +82,7 @@ def create_annotation_text(data_dir, annotation_path):
         f_train.write(json.dumps(line, ensure_ascii=False) + "\n")
     # 测试集
     lines = []
-    audio_dir = os.path.join(data_dir, 'mp3', 'test')
+    audio_dir = os.path.join(data_dir, 'wav', 'test')
     for subfolder, _, filelist in sorted(os.walk(audio_dir)):
         for fname in filelist:
             audio_path = os.path.join(subfolder, fname)
@@ -93,7 +96,7 @@ def create_annotation_text(data_dir, annotation_path):
     # 添加音频时长
     for i in tqdm(range(len(lines))):
         audio_path = lines[i]['audio']['path']
-        sample, sr = soundfile.read(audio_path)
+        sample, sr = librosa.load(audio_path)
         duration = round(sample.shape[0] / float(sr), 2)
         lines[i]["duration"] = duration
         # lines[i]["sentences"] = [{"start": 0, "end": duration, "text": lines[i]["sentence"]}]
